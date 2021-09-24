@@ -1,0 +1,10 @@
+roseduuri pää(input) {
+  seonnääs nii et a on ny 10;
+
+  elikkä jos (seonnääs nii et b on ny 0; b om piänempi ku a; b on ny b plus 3) ni {
+    a on ny a plus 2;
+  }
+
+  kylä lähtee input plus a;
+}
+

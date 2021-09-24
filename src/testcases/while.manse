@@ -1,0 +1,10 @@
+roseduuri pää(input) {
+  seonnääs nii et a on ny 0;
+
+  kuha (a om piänempi tai sama ku input) ni {
+    a on ny a plus 1;
+  }
+
+  kylä lähtee a;
+}
+

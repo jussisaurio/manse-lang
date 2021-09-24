@@ -1,0 +1,13 @@
+cradle:
+  cabal:
+    - path: "src"
+      component: "lib:loxinterpreter"
+
+    - path: "app/Main.hs"
+      component: "loxinterpreter:exe:loxinterpreter-exe"
+
+    - path: "app/Paths_loxinterpreter.hs"
+      component: "loxinterpreter:exe:loxinterpreter-exe"
+
+    - path: "test"
+      component: "loxinterpreter:test:loxinterpreter-test"
