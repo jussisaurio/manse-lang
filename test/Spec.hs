@@ -40,6 +40,12 @@ runTests programs =
                     execute (interpretProgram program [VNil]) emptyEnv `shouldBe` Right (VNumber 1.0)
                     execute (interpretProgram program [VNumber 5.0]) emptyEnv `shouldBe` Right (VNumber 5.0)
                     execute (interpretProgram program [VNumber 6.0]) emptyEnv `shouldBe` Right (VNumber 60.0)
+            describe "variable scope" $ do
+                let program = getProgram "scope.manse"
+                it "can shadow variables in inner scope without affecting outer" $ do
+                    execute (interpretProgram program [VBoolean True]) emptyEnv `shouldBe` Right (VNumber 0.0)
+                it "can reassign variables in outer scope" $ do
+                    execute (interpretProgram program [VBoolean False]) emptyEnv `shouldBe` Right (VNumber 1.0)
     describe "parser tests" $ do
             describe "variable declaration" $ do
                 it "without initializer" $ do

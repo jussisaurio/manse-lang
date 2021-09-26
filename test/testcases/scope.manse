@@ -1,0 +1,13 @@
+roseduuri pää(bool) {
+    seonnääs nii et a on ny 0;
+    
+    jos (bool) ni {
+        // locally shadowed a
+        seonnääs nii et a on ny 1;
+    } mut jos ei ni {
+        // mutates a in upper scope
+        a on ny 1;
+    }
+
+    kylä lähtee a;
+}

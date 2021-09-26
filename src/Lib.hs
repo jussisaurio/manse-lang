@@ -554,17 +554,11 @@ safeHead :: [a] -> Maybe a
 safeHead [] = Nothing
 safeHead (x : xs) = Just x
 
-type ExecutionContextT e m a = SM.StateT Environment (ExceptT e m) a
-
-runExecutionContextT :: Monad m => SM.StateT s (ExceptT e m) a -> s -> m (Either e a)
-runExecutionContextT m = runExceptT . SM.evalStateT m
-
-type ExecutionContext a = ExecutionContextT RuntimeError Identity a
-
-execute :: SM.StateT s (ExceptT e Identity) a -> s -> Either e a
-execute m = runIdentity . runExecutionContextT m
-
+type ExecutionContext a = SM.StateT Environment (ExceptT RuntimeError Identity) a
+execute m env = runIdentity . runExceptT $ SM.evalStateT m env
+executeAndReturnState m env = runIdentity . runExceptT $ SM.runStateT m env
 tryExecute m env = either throwError pure $ execute m env
+tryExecuteAndReturnState m env = either throwError pure $ executeAndReturnState m env
 
 interpretStatement :: Statement -> ExecutionContext (Maybe RuntimeValue)
 interpretStatement stmt = case stmt of
@@ -578,26 +572,26 @@ interpretStatement stmt = case stmt of
           val <- evalExp exp
           SM.modify (\env' -> env'{variables = M.insert varN val (variables env')}) >> pure Nothing
   E (ExpStatement e) -> evalExp e >> pure Nothing
-  If (IfStatement condExp (BlockStatement trueB) maybeFalseB) -> do
+  If (IfStatement condExp trueB maybeFalseB) -> do
     condition <- isTruthy <$> evalExp condExp
     if condition
-      then shortCircuitReturn trueB
+      then interpretStatement (Block trueB)
       else case maybeFalseB of
         Nothing -> pure Nothing
-        Just (BlockStatement falseB) -> shortCircuitReturn falseB
+        Just falseB -> interpretStatement (Block falseB)
   For (ForStatement init maybeExp1 maybeExp2 (BlockStatement stmts)) -> do
     void $ case init of
       Left de -> interpretStatement $ D de
       Right e -> interpretStatement $ E e
     -- desugar to while loop
     case (maybeExp1, maybeExp2) of
-      (Just e1, Just e2) -> interpretStatement $ While $ WhileStatement (e1) (BlockStatement (stmts <> [E $ ExpStatement e2]))
+      (Just e1, Just e2) -> interpretStatement $ While $ WhileStatement e1 (BlockStatement (stmts <> [E $ ExpStatement e2]))
       (Just e1, Nothing) -> interpretStatement $ While $ WhileStatement e1 (BlockStatement stmts)
       (Nothing, Just e2) -> interpretStatement $ While $ WhileStatement e2 (BlockStatement stmts)
       (Nothing, Nothing) -> interpretStatement $ While $ WhileStatement (BoolLit True) (BlockStatement stmts)
-  While (WhileStatement a (BlockStatement stmts)) ->
+  While (WhileStatement a block) ->
     let loop = evalExp a >>= (\truthy -> if not truthy then pure Nothing else do
-          maybeReturned <- shortCircuitReturn stmts
+          maybeReturned <- interpretStatement (Block block)
           maybe loop (pure . Just) maybeReturned) . isTruthy
       in loop
 
@@ -605,7 +599,7 @@ interpretStatement stmt = case stmt of
     Nothing -> pure $ Just VNil
     Just e -> evalExp e <&> Just
   Print (PrintStatement p) -> pure Nothing -- todo handle prints
-  Block (BlockStatement stmts) -> shortCircuitReturn stmts
+  Block (BlockStatement stmts) -> runInChildScope $ shortCircuitReturn stmts
   Func (FunctionDeclaration name params block) -> do
     env <- SM.get
     case M.lookup name (variables env) of
@@ -624,6 +618,13 @@ callFn (FunctionDeclaration n params block) args =
       a <- interpretStatement (Block block)
       pure $ fromMaybe VNil a
 
+runInChildScope :: ExecutionContext a -> ExecutionContext a
+runInChildScope m = do
+  env <- SM.get
+  (v, newState) <- tryExecuteAndReturnState m $ Environment{parent = Just env, variables = M.empty}
+  SM.modify(\env' -> fromMaybe env' (parent newState))
+  pure v
+
 interpretProgram :: Program -> [RuntimeValue] -> ExecutionContext RuntimeValue
 interpretProgram (Program stmts) args = do
   case safeHead stmts of
@@ -633,9 +634,7 @@ interpretProgram (Program stmts) args = do
     Nothing -> do
       main <- SM.gets (M.lookup "pää" . variables)
       case main of
-        Just (VFunc decl) -> do
-          env <- SM.get
-          tryExecute (callFn decl args) $ Environment{parent = Just env, variables = M.empty}
+        Just (VFunc decl) -> runInChildScope (callFn decl args)
         _ -> runtimeError "pää is not a function"
 
 isTruthy :: RuntimeValue -> Bool
@@ -650,6 +649,17 @@ recursiveLookup str = do
     (Just v, _) -> pure $ Just v
     (Nothing, Nothing) -> pure Nothing
     (Nothing, Just upperCtx) -> tryExecute (recursiveLookup str) upperCtx
+
+recursiveAssign str v = do
+  env <- SM.get
+  case (M.lookup str (variables env), parent env) of
+    (Just val, _) -> SM.put env{variables = M.insert str v (variables env)} >> pure v
+    (Nothing, Nothing) -> runtimeError ("Assigning to undefined variable " <> show str)
+    (Nothing, Just upperCtx) -> do
+        (_, st) <- tryExecuteAndReturnState (recursiveAssign str v) upperCtx
+        SM.modify(\env' -> env' { parent = Just st })
+        pure v
+  
 
 evalExp :: Exp -> ExecutionContext RuntimeValue
 evalExp exp = case exp of
@@ -749,17 +759,11 @@ evalExp exp = case exp of
   BoolLit bool -> pure $ VBoolean bool
   Parenthesized e -> evalExp e
   Assign e1 e2 -> do
-    -- todo figure out how to update in parent scope immutably
-    vars <- SM.gets variables
     case e1 of
-      Ident str -> case M.lookup str vars of
-        Just _ -> do
+      Ident str -> do 
           r <- evalExp e2
-          env <- SM.get
-          SM.put $ env{variables = M.insert str r (variables env)}
-          pure r
-        Nothing -> runtimeError "Assigning to undefined variable"
-      _ -> runtimeError "Invalid left-hand side in assignment"
+          recursiveAssign str r
+      _ -> runtimeError ("Invalid left-hand side in assignment:" <> show e1)
   Nil -> pure VNil
   Call exp args ->
     case exp of
@@ -769,8 +773,7 @@ evalExp exp = case exp of
           Nothing -> runtimeError "trying to call undefined function"
           Just (VFunc decl) -> do
             vals <- mapM evalExp args
-            env <- SM.get
-            tryExecute (callFn decl vals) $ Environment{parent = Just env, variables = M.empty}
+            runInChildScope (callFn decl vals)
           _ -> runtimeError (show fnName <> " is not callable")
       _ -> runtimeError "Expression is not callable"
 
