@@ -534,16 +534,16 @@ parseFile fn = do
       print $ errorBundlePretty errbundle
       pure (Left ())
 
-data RuntimeValue = VNumber Double | VString T.Text | VBoolean Bool | VNil | VFunc FunctionDeclaration deriving (Eq)
+data RuntimeValue = VNumber Double | VString T.Text | VBoolean Bool | VNil | VFunc (FunctionDeclaration, Environment) deriving (Eq)
 
 instance Show RuntimeValue where
   show (VNumber n) = let isInt x = x == fromInteger (round x) in if isInt n then show (round n) else show n
   show (VString s) = show s
   show (VBoolean b) = show b
   show VNil = "nil"
-  show (VFunc (FunctionDeclaration n _ _)) = show ("<roseduuri " <> n <> ">")
+  show (VFunc (FunctionDeclaration n _ _, _)) = show ("<roseduuri " <> n <> ">")
 
-data Environment = Environment {parent :: Maybe Environment, variables :: M.Map T.Text RuntimeValue} deriving (Show)
+data Environment = Environment {parent :: Maybe Environment, variables :: M.Map T.Text RuntimeValue} deriving (Eq, Show)
 
 newtype RuntimeError = RuntimeError String deriving (Show, Eq)
 
@@ -599,12 +599,27 @@ interpretStatement stmt = case stmt of
     Nothing -> pure $ Just VNil
     Just e -> evalExp e <&> Just
   Print (PrintStatement p) -> pure Nothing -- todo handle prints
-  Block (BlockStatement stmts) -> runInChildScope $ shortCircuitReturn stmts
+  Block (BlockStatement stmts) -> do
+    env <- SM.get
+    runAsChildScopeOf env $ shortCircuitReturn stmts
   Func (FunctionDeclaration name params block) -> do
     env <- SM.get
     case M.lookup name (variables env) of
       Just v -> runtimeError "Redeclaration of function"
-      Nothing -> SM.modify (\env' -> env'{variables = M.insert name (VFunc (FunctionDeclaration name params block)) (variables env')}) >> pure Nothing
+      Nothing -> do
+        -- TODO ugly asf, have to give the declared function a closure that contains itself, so modifying twice
+        -- There Must Be A Better Way (tm)
+        SM.modify (\env' -> 
+          let newVariables = M.insert name (VFunc (FunctionDeclaration name params block, env')) (variables env)
+              newEnv = env'{variables = newVariables}
+              in newEnv
+          )
+        SM.modify (\env' -> 
+          let newVariables = M.insert name (VFunc (FunctionDeclaration name params block, env')) (variables env)
+              newEnv = env'{variables = newVariables}
+              in newEnv
+          )
+        pure Nothing
 
 shortCircuitReturn :: [Statement] -> ExecutionContext (Maybe RuntimeValue)
 shortCircuitReturn = foldM ( \m s -> if isJust m then pure m else interpretStatement s) Nothing
@@ -618,10 +633,9 @@ callFn (FunctionDeclaration n params block) args =
       a <- interpretStatement (Block block)
       pure $ fromMaybe VNil a
 
-runInChildScope :: ExecutionContext a -> ExecutionContext a
-runInChildScope m = do
-  env <- SM.get
-  (v, newState) <- tryExecuteAndReturnState m $ Environment{parent = Just env, variables = M.empty}
+runAsChildScopeOf :: Environment -> ExecutionContext a -> ExecutionContext a
+runAsChildScopeOf par m = do
+  (v, newState) <- tryExecuteAndReturnState m $ Environment{parent = Just par, variables = M.empty}
   SM.modify(\env' -> fromMaybe env' (parent newState))
   pure v
 
@@ -634,7 +648,7 @@ interpretProgram (Program stmts) args = do
     Nothing -> do
       main <- SM.gets (M.lookup "pää" . variables)
       case main of
-        Just (VFunc decl) -> runInChildScope (callFn decl args)
+        Just (VFunc (decl, closure)) -> runAsChildScopeOf closure (callFn decl args)
         _ -> runtimeError "pää is not a function"
 
 isTruthy :: RuntimeValue -> Bool
@@ -768,12 +782,13 @@ evalExp exp = case exp of
   Call exp args ->
     case exp of
       (Ident fnName) -> do
+        env <- SM.get
         maybeFn <- recursiveLookup fnName
         case maybeFn of
-          Nothing -> runtimeError "trying to call undefined function"
-          Just (VFunc decl) -> do
+          Nothing -> runtimeError ("trying to call undefined function " <> show fnName)
+          Just (VFunc (decl, closure)) -> do
             vals <- mapM evalExp args
-            runInChildScope (callFn decl vals)
+            runAsChildScopeOf closure (callFn decl vals)
           _ -> runtimeError (show fnName <> " is not callable")
       _ -> runtimeError "Expression is not callable"
 

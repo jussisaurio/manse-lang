@@ -1,0 +1,15 @@
+roseduuri getClosure() {
+    seonnääs nii et x on ny 3;
+
+    roseduuri double() {
+        kylä lähtee x kertaa 2;
+    }
+
+    kylä lähtee double;
+}
+
+roseduuri pää() {
+    seonnääs nii et funcWithClosure on ny getClosure();
+
+    kylä lähtee funcWithClosure();
+}

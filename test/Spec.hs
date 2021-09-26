@@ -46,6 +46,10 @@ runTests programs =
                     execute (interpretProgram program [VBoolean True]) emptyEnv `shouldBe` Right (VNumber 0.0)
                 it "can reassign variables in outer scope" $ do
                     execute (interpretProgram program [VBoolean False]) emptyEnv `shouldBe` Right (VNumber 1.0)
+            describe "closures" $ do
+                let program = getProgram "closure.manse"
+                it "first-class-functions can access the environment they were defined in" $ do
+                    execute (interpretProgram program []) emptyEnv `shouldBe` Right (VNumber 6.0)
     describe "parser tests" $ do
             describe "variable declaration" $ do
                 it "without initializer" $ do
