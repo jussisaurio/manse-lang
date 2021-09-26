@@ -3,12 +3,25 @@
 We are reading [Crafting Interpreters](https://craftinginterpreters.com) at Reaktor Tampere book club.
 This language is heavily influenced by that book, except written in a good programming language.
 
-Better docs coming later.
+Manse is a C-family style dynamically typed, interpreted language whose syntax resembles the regional dialect of Tampere, Finland.
 
-Better implementation coming later.
+## Current features:
 
-Better language features coming later.
+- Variable declaration: `seonnääs nii et VARIABLE_NAME on ny VARIABLE_VALUE;`
+- Variable reassignment: `VARIABLE_NAME on ny VARIABLE_VALUE;` 
+- If statements: `jos (CONDITION) ni {} mut jos ei ni {}`)
+- While loops: `kuha (CONDITION) ni {}`
+- For loops: `elikkä jos (EXPRESSION_OR_DECLARATION; CONDITION; EXPRESSION) {}`
+- Functions: `roseduuri FUNCTION_NAME(arg1, arg2) { kylä lähtee arg1 plus arg2; }`
+- Block scoped variables
+- First class functions and closures
 
+## TODO:
+
+- Better docs
+- Fix a million edge cases, probably
+- Moar tests
+- Moar features
 
 ## Example Manse file:
 
