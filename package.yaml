@@ -48,6 +48,7 @@ dependencies:
   - text
   - mtl
   - directory
+  - hspec
 
 library:
   source-dirs: src

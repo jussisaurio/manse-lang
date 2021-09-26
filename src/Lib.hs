@@ -536,7 +536,7 @@ instance Show RuntimeValue where
 
 data Environment = Environment {parent :: Maybe Environment, variables :: M.Map T.Text RuntimeValue} deriving (Show)
 
-newtype RuntimeError = RuntimeError String deriving (Show)
+newtype RuntimeError = RuntimeError String deriving (Show, Eq)
 
 runtimeError :: String -> ExecutionContext a
 runtimeError = throwError . RuntimeError
