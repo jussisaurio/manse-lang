@@ -13,10 +13,19 @@ jobs:
         ghc: ['8.10.7']
         cabal: ['latest']
         stack: ['latest']
-        os: [ubuntu-latest, macOS-latest]
+        os: [ubuntu-latest]
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
+    - name: Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.stack
+          .stack-work
+        key: ${{ runner.os }}-stack-${{ hashFiles('stack.yaml.lock', 'package.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-stack
     - name: Install Haskell tools
       uses: haskell/actions/setup@v1
       with:
