@@ -51,6 +51,8 @@ import Text.Megaparsec.Debug (dbg)
 import Text.Megaparsec.Error (errorBundlePretty)
 import Text.Megaparsec.Stream (VisualStream)
 import Debug.Trace
+import Data.Bifunctor (first)
+import Data.List.NonEmpty (toList)
 
 class Constrable a where
   constr :: a -> Constr
@@ -503,6 +505,13 @@ parsePrintStatement = do
   e <- parseExp (LAssoc 0)
   discard TSemicolon
   pure $ PrintStatement e
+
+parseTextToProgram txt = 
+  case first errorBundlePretty $ parse parseSourceFile "" txt of
+    Left err -> Left err
+    Right ts -> case parse parseProgram "" ts of
+                      Left peb -> Left $ show peb
+                      Right pro -> Right pro
 
 parseFile :: String -> IO (Either () Program)
 parseFile fn = do
