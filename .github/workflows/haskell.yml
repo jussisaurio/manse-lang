@@ -1,0 +1,27 @@
+name: Haskell CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        ghc: ['8.10.7']
+        cabal: ['latest']
+        stack: ['latest']
+        os: [ubuntu-latest, macOS-latest]
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Haskell tools
+      uses: haskell/actions/setup@v1
+      with:
+        ghc-version: ${{ matrix.ghc }}
+        cabal-version: ${{ matrix.cabal }}
+        stack-version: ${{ matrix.stack }}
+    - name: Test
+      run: stack test
