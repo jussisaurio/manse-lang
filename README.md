@@ -18,6 +18,7 @@ Manse is a C-family style dynamically typed, interpreted language whose syntax r
 
 ## TODO:
 
+- Recursion is broken due to the stupid way closures are implemented lmao
 - Better docs
 - Fix a million edge cases, probably
 - Moar tests
@@ -27,26 +28,20 @@ Manse is a C-family style dynamically typed, interpreted language whose syntax r
 
 
 ```
-roseduuri hölömö_viponassi(n) {
-  jos (n om piänempi tai sama ku 1) ni {
-    kylä lähtee n;
-  } mut jos ei ni {
-    kylä lähtee hölömö_viponassi(n miinus 1) plus hölömö_viponassi(n miinus 2);
-  }
+roseduuri getClosure() {
+    seonnääs nii et x on ny 3;
+
+    roseduuri double() {
+        kylä lähtee x kertaa 2;
+    }
+
+    kylä lähtee double;
 }
 
-// pää is like 'main' in regular boring languages
-roseduuri pää(arg1, arg2) {
-  seonnääs nii et a on ny 1;
-  kuha (a om piänempi ku 10) ni {
-    a on ny a plus 1;
-  }
+roseduuri pää() {
+    seonnääs nii et funcWithClosure on ny getClosure();
 
-  elikkä jos (seonnääs nii et b on ny 0; b om piänempi ku a; b on ny b plus 3) ni {
-    a on ny a plus 2;
-  }
-
-  kylä lähtee a kertaa hölömö_viponassi(arg1 plus arg2);
+    kylä lähtee funcWithClosure();
 }
 
 ```
