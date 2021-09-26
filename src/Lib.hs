@@ -150,10 +150,10 @@ parseToken =
           <|> (TAsterisk <$ string "kertaa ")
           <|> try (TBangEqual <$ string "eijoo ")
           <|> (TBang <$ string "!")
-          <|> try (TDoubleEqual <$ string "samaku ")
+          <|> try (TDoubleEqual <$ string "on sama ku ")
           <|> (TEqual <$ string "on ny ")
           <|> try (TGreaterEqual <$ string "on isompi tai sama ku ")
-          <|> (TGreater <$ string "on isompiku ")
+          <|> (TGreater <$ string "on isompi ku ")
           <|> try (TLessEqual <$ string "om piänempi tai sama ku ")
           <|> (TLess <$ string "om piänempi ku ")
           <|> try (TFun <$ parseKeyword "roseduuri")
@@ -706,7 +706,7 @@ evalExp exp = case exp of
       (VString a, VString b) -> pure (VBoolean $ a == b)
       (VBoolean a, VBoolean b) -> pure (VBoolean $ a == b)
       (VNil, VNil) -> pure (VBoolean True)
-      _ -> runtimeError "Cannot test for equality unless both are same type and one of: number, string, boolean or nil"
+      _ -> pure $ VBoolean False
   CompareNEQ e1 e2 -> do
     r1 <- evalExp e1
     r2 <- evalExp e2

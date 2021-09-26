@@ -1,0 +1,11 @@
+roseduuri pää(a) {
+    jos (a on sama ku tyhjä) ni {
+        a on ny 1;
+    }
+
+    jos (a on isompi ku 5) ni {
+        kylä lähtee a kertaa 10;
+    } mut jos ei ni {
+        kylä lähtee a;
+    }
+}

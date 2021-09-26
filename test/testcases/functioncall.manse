@@ -1,0 +1,7 @@
+roseduuri kertolasku(a, b) {
+    kylä lähtee a kertaa b;
+}
+
+roseduuri pää() {
+    kylä lähtee kertolasku(3, 4) plus kertolasku(10 jaettuna 2, 2);
+}
