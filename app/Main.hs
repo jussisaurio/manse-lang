@@ -10,4 +10,4 @@ runFile = do
       Nothing -> print "no filename provided"
       Just fn -> runProgram fn []
 
-main = print "tba"
+main = runFile

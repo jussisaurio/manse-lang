@@ -50,6 +50,10 @@ runTests programs =
                 let program = getProgram "closure.manse"
                 it "first-class-functions can access the environment they were defined in" $ do
                     execute (interpretProgram program []) emptyEnv `shouldBe` Right (VNumber 6.0)
+            describe "recursion" $ do
+                let program = getProgram "viponassi.manse"
+                it "works" $ do
+                    execute (interpretProgram program []) emptyEnv `shouldBe` Right (VNumber 34.0)
     describe "parser tests" $ do
             describe "variable declaration" $ do
                 it "without initializer" $ do

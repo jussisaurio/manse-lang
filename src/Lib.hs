@@ -607,15 +607,8 @@ interpretStatement stmt = case stmt of
     case M.lookup name (variables env) of
       Just v -> runtimeError "Redeclaration of function"
       Nothing -> do
-        -- TODO ugly asf, have to give the declared function a closure that contains itself, so modifying twice
-        -- There Must Be A Better Way (tm)
         SM.modify (\env' -> 
-          let newVariables = M.insert name (VFunc (FunctionDeclaration name params block, env')) (variables env)
-              newEnv = env'{variables = newVariables}
-              in newEnv
-          )
-        SM.modify (\env' -> 
-          let newVariables = M.insert name (VFunc (FunctionDeclaration name params block, env')) (variables env)
+          let newVariables = M.insert name (VFunc (FunctionDeclaration name params block, newEnv)) (variables env')
               newEnv = env'{variables = newVariables}
               in newEnv
           )
@@ -630,7 +623,9 @@ callFn (FunctionDeclaration n params block) args =
     then runtimeError ("wrong num of args: expected " <> show params <> ", got arg count: " <> show (length args))
     else do
       SM.modify (\env -> let newVars = foldr (\(k, v) m -> M.insert k v m) (variables env) (zip params args) in env{variables = newVars})
-      a <- interpretStatement (Block block)
+      -- not sure why I need this tbh, figure out later #somethingrotteninthestateofdenmark
+      SM.modify (\env -> let newVars = M.insert n (VFunc (FunctionDeclaration n params block, env)) (variables env) in env{variables = newVars})
+      a <- let (BlockStatement stmts) = block in shortCircuitReturn stmts
       pure $ fromMaybe VNil a
 
 runAsChildScopeOf :: Environment -> ExecutionContext a -> ExecutionContext a

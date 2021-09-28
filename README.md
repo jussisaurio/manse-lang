@@ -15,14 +15,16 @@ Manse is a C-family style dynamically typed, interpreted language whose syntax r
 - Functions: `roseduuri FUNCTION_NAME(arg1, arg2) { kylä lähtee arg1 plus arg2; }`
 - Block scoped variables
 - First class functions and closures
+- Recursion
 
 ## TODO:
 
-- Recursion is broken due to the stupid way closures are implemented lmao
 - Better docs
+- Better, non-horrible error messages
 - Fix a million edge cases, probably
 - Moar tests
 - Moar features
+- REPL
 
 ## Example Manse file:
 
@@ -46,3 +48,14 @@ roseduuri pää() {
 
 ```
 
+### Requirements:
+
+[Stack build tool for Haskell](https://docs.haskellstack.org/en/stable/README/)
+
+### To run tests:
+
+`stack test`
+
+### To run a Manse file:
+
+`stack run <path-to-file>`
