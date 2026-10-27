@@ -1,0 +1,16 @@
+pituus(teksti tai lista) -> kokonaisluku
+väli(kokonaisluku, kokonaisluku) -> lista
+satunnainen(kokonaisluku, kokonaisluku) -> kokonaisluku
+lisää(lista, mikä vaan) -> tyhjä
+poista(lista) -> mikä vaan
+numeroks(teksti) -> luku tai tyhjä
+lue() -> teksti tai tyhjä
+kello() -> luku
+ohje(mikä vaan) -> teksti
+osa(teksti tai lista, kokonaisluku, kokonaisluku) -> mikä vaan
+roseduuri kartota(lista, f) ei tästä oo ohjetta, tää on luku
+luku teksti totuusarvo tyhjä lista roseduuri roseduuri
+tosi
+tosi
+[1, "kaks"]
+tosi

@@ -1,0 +1,35 @@
+Hei kato ny! test/golden/virhe_resoluutio.manse:1:1: "kylä lähtee" toimii vaan roseduurin sisällä
+  |
+1 | kylä lähtee 5;
+  | ^
+
+Hei kato ny! test/golden/virhe_resoluutio.manse:4:27: muuttujaa "a" ei voi käyttää sen omassa alustuksessa
+  |
+4 |   seonnääs nii et a on ny a;
+  |                           ^
+
+Hei kato ny! test/golden/virhe_resoluutio.manse:6:19: "b" on jo esitelty tässä lohkossa
+  |
+6 |   seonnääs nii et b;
+  |                   ^
+
+Hei kato ny! test/golden/virhe_resoluutio.manse:7:3: "ny riittää" toimii vaan silmukassa
+  |
+7 |   ny riittää;
+  |   ^
+
+Hei kato ny! test/golden/virhe_resoluutio.manse:8:11: "itse" toimii vaan luakan metodeissa
+  |
+8 |   tulosta itse;
+  |           ^
+
+Hei kato ny! test/golden/virhe_resoluutio.manse:13:5: alota-metodista ei voi palauttaa arvoa
+   |
+13 |     kylä lähtee 1;
+   |     ^
+
+Hei kato ny! test/golden/virhe_resoluutio.manse:15:11: "kanta" toimii vaan luakassa jolla on kantaluakka
+   |
+15 |   m() eli kanta.m();
+   |           ^
+

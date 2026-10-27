@@ -1,0 +1,62 @@
+// The original test programs, ported to the new Manse.
+
+roseduuri kertolasku(a, b) {
+  kylä lähtee a kertaa b;
+}
+
+roseduuri hölömö_viponassi(n) {
+  jos n om piänempi tai sama ku 1 ni {
+    kylä lähtee n;
+  } mut jos ei ni {
+    kylä lähtee hölömö_viponassi(n miinus 1) plus hölömö_viponassi(n miinus 2);
+  }
+}
+
+roseduuri getClosure() {
+  seonnääs nii et x on ny 3;
+  roseduuri double() {
+    kylä lähtee x kertaa 2;
+  }
+  kylä lähtee double;
+}
+
+roseduuri ifelse(a) {
+  jos (a on sama ku tyhjä) ni {
+    a on ny 1;
+  }
+  jos (a on isompi ku 5) ni {
+    kylä lähtee a kertaa 10;
+  } mut jos ei ni {
+    kylä lähtee a;
+  }
+}
+
+roseduuri scope(bool) {
+  seonnääs nii et a on ny 0;
+  jos (bool) ni {
+    seonnääs nii et a on ny 1;
+  } mut jos ei ni {
+    a on ny 1;
+  }
+  kylä lähtee a;
+}
+
+roseduuri pää() {
+  tulosta "functioncall:", kertolasku(3, 4) plus kertolasku(10 jaettuna 2, 2);
+  tulosta "viponassi:", hölömö_viponassi(9);
+  tulosta "closure:", getClosure()();
+  tulosta "ifelse:", ifelse(tyhjä), ifelse(5), ifelse(6);
+  tulosta "scope:", scope(tosi), scope(epätosi);
+
+  seonnääs nii et a on ny 10;
+  elikkä jos (seonnääs nii et b on ny 0; b om piänempi ku a; b on ny b plus 3) ni {
+    a on ny a plus 2;
+  }
+  tulosta "for:", 5 plus a;
+
+  seonnääs nii et w on ny 0;
+  kuha (w om piänempi tai sama ku 5) ni {
+    w on ny w plus 1;
+  }
+  tulosta "while:", w;
+}

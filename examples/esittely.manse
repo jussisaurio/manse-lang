@@ -1,0 +1,59 @@
+// Manse-esittely
+
+luakka Elukka {
+  alota(nimi) {
+    itse.nimi on ny nimi;
+  }
+  ääntele() eli "{itse.nimi} sanoo {itse.ääni()}";
+  ääni() eli "...";
+}
+
+luakka Koira niinku Elukka {
+  ääni() eli "hau";
+  ääntele() eli kanta.ääntele() plus "!";
+}
+
+roseduuri laskuri() {
+  seonnääs nii et n on ny 0;
+  kylä lähtee roseduuri() {
+    n on ny n plus 1;
+    kylä lähtee n;
+  };
+}
+
+roseduuri pää(argumentit) {
+  tulosta "Moro!", "Argumentit:", argumentit;
+
+  seonnääs nii et c on ny laskuri();
+  c();
+  c();
+  tulosta "laskuri:", c();
+
+  tulosta Koira("Musti").ääntele();
+  tulosta Elukka("Kissa").ääntele();
+
+  seonnääs nii et luvut on ny väli(1, 11);
+  seonnääs nii et neliöt on ny luvut
+    sitte suodata(roseduuri(x) eli x jakojäännös 2 on sama ku 0)
+    sitte kartota(roseduuri(x) eli x potenssiin 2);
+  tulosta "parillisten neliöt:", neliöt, "summa:", neliöt.summa();
+
+  tulosta järjestä([5, 3, 9, 1, 7]);
+  tulosta järjestä_millä(["kolme", "yy", "kaks"], pituus);
+
+  elikkä jos (seonnääs nii et i on ny 0; i om piänempi ku 10; i on ny i plus 1) ni {
+    jos i on sama ku 2 ni { jatketaa; }
+    jos i on sama ku 5 ni { ny riittää; }
+    tulosta "i =", i;
+  }
+
+  yritä {
+    tulosta 1 jaettuna 0;
+  } jos käy kalpaten (virhe) ni {
+    tulosta "kävi kalpaten:", virhe;
+  }
+
+  tulosta ohje(pituus);
+  tulosta ohje(osa);
+  tulosta "Tampere" kertaa 2;
+}

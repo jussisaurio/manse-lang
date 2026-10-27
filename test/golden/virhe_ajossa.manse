@@ -1,0 +1,13 @@
+roseduuri jaa(a, b) {
+  kylä lähtee a jaettuna b;
+}
+
+roseduuri laske() {
+  kylä lähtee jaa(1, 0);
+}
+
+roseduuri pää() {
+  tulosta "ennen virhettä";
+  laske();
+  tulosta "tätä ei tulosteta";
+}

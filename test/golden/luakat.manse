@@ -1,0 +1,54 @@
+luakka Elukka {
+  alota(nimi) {
+    itse.nimi on ny nimi;
+  }
+  ääntele() eli "{itse.nimi} sanoo {itse.ääni()}";
+  ääni() eli "...";
+}
+
+luakka Koira niinku Elukka {
+  alota(nimi, rotu) {
+    kanta.alota(nimi);
+    itse.rotu on ny rotu;
+  }
+  ääni() eli "hau";
+  ääntele() eli kanta.ääntele() plus "!";
+}
+
+luakka Pentu niinku Koira {
+  ääni() eli "vinku";
+}
+
+seonnääs nii et m on ny Koira("Musti", "sekarotuinen");
+tulosta m.ääntele();
+tulosta Pentu("Ressu", "mäyräkoira").ääntele();
+tulosta Elukka("Kissa").ääntele();
+tulosta m;
+tulosta Koira, ohje(Koira), tyyppi(m);
+
+// Methods remember their instance.
+seonnääs nii et metodi on ny m.ääni;
+tulosta metodi();
+
+// Fields can be added and changed from outside.
+m.ikä on ny 3;
+m.ikä on ny m.ikä plus 1;
+tulosta m.ikä;
+
+luakka Pino {
+  alota() {
+    itse.alkiot on ny [];
+  }
+  työnnä(x) {
+    lisää(itse.alkiot, x);
+    kylä lähtee itse;
+  }
+  ota() eli poista(itse.alkiot);
+  koko() eli pituus(itse.alkiot);
+}
+seonnääs nii et pino on ny Pino();
+pino.työnnä(1).työnnä(2).työnnä(3);
+tulosta pino.ota(), pino.koko();
+
+// Calling alota directly returns itse.
+tulosta m.alota("Rekku", "susi") on sama ku m, m.nimi;

@@ -1,76 +1,66 @@
-name: loxinterpreter
-version: 0.1.0.0
-github: "githubuser/loxinterpreter"
+name: manse-lang
+version: 1.0.0
+synopsis: A programming language that speaks the Tampere dialect
 license: BSD3
-author: "Author name here"
-maintainer: "example@example.com"
-copyright: "2021 Author name here"
-
+author: Jussi Saurio
 extra-source-files:
   - README.md
   - ChangeLog.md
+  - prelude/*.manse
 
-# Metadata used when publishing your package
-# synopsis:            Short description of your package
-# category:            Web
+language: GHC2024
 
-# To avoid duplicated efforts in documentation and dealing with the
-# complications of embedding Haddock markup inside cabal files, it is
-# common to point users to the README.md file.
-description: Please see the README on GitHub at <https://github.com/githubuser/loxinterpreter#readme>
+default-extensions:
+  - OverloadedStrings
+  - LambdaCase
+  - MultiWayIf
+  - TypeFamilies
+  - DataKinds
+  - UndecidableInstances
+  - DerivingVia
+  - PatternSynonyms
+  - StrictData
 
-default-extensions: OverloadedStrings,
-  LambdaCase,
-  DeriveAnyClass,
-  DeriveGeneric,
-  DataKinds,
-  DefaultSignatures,
-  EmptyDataDeriving,
-  FlexibleContexts,
-  FlexibleInstances,
-  KindSignatures,
-  OverloadedStrings,
-  ScopedTypeVariables,
-  TypeApplications,
-  TypeOperators,
-  TypeFamilies,
-  PolyKinds,
-  KindSignatures,
-  UndecidableInstances,
-  GADTs,
-  MultiParamTypeClasses,
-  InstanceSigs
+ghc-options:
+  - -Wall
+  - -Wno-name-shadowing
+  - -Wno-unused-do-bind
+  # The package is manse-lang and the main module is Manse; on case-insensitive
+  # file systems clang complains about paths differing only in case.
+  - -optP-Wno-nonportable-include-path
 
 dependencies:
-  - base >= 4.7 && < 5
-  - megaparsec
+  - base >= 4.21 && < 5
   - containers
   - text
   - mtl
-  - directory
-  - hspec
+  - megaparsec
+  - parser-combinators
+  - vector
+  - time
+  - random
+  - file-embed
 
 library:
   source-dirs: src
 
 executables:
-  loxinterpreter-exe:
+  manse:
     main: Main.hs
     source-dirs: app
-    ghc-options:
-      - -threaded
-      - -rtsopts
-      - -with-rtsopts=-N
+    ghc-options: [-threaded, -rtsopts, -O2]
     dependencies:
-      - loxinterpreter
+      - manse-lang
+      - haskeline
+      - directory
 
 tests:
-  loxinterpreter-test:
+  manse-test:
     main: Spec.hs
     source-dirs: test
-    ghc-options:
-      - -threaded
-      - -rtsopts
-      - -with-rtsopts=-N
+    ghc-options: [-threaded, -rtsopts]
     dependencies:
-      - loxinterpreter
+      - manse-lang
+      - hspec
+      - directory
+      - filepath

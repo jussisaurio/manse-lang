@@ -1,0 +1,3 @@
+roseduuri pää(argumentit) {
+  tulosta "sain", pituus(argumentit), "argumenttia:", argumentit;
+}

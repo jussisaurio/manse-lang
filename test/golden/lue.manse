@@ -1,0 +1,6 @@
+seonnääs nii et rivi on ny lue();
+kuha rivi eijoo tyhjä ni {
+  tulosta "luettiin:", rivi, "numerona:", numeroks(rivi);
+  rivi on ny lue();
+}
+tulosta "loppu";

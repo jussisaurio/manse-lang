@@ -1,0 +1,61 @@
+roseduuri luokittele(n) {
+  jos n om piänempi ku 0 ni {
+    kylä lähtee "negatiivinen";
+  } mut jos n on sama ku 0 ni {
+    kylä lähtee "nolla";
+  } mut jos n om piänempi ku 10 ni {
+    kylä lähtee "pieni";
+  } mut jos ei ni {
+    kylä lähtee "iso";
+  }
+}
+tulosta luokittele(miinus 5), luokittele(0), luokittele(3), luokittele(100);
+
+// break and continue in every kind of loop; continue still runs the step.
+elikkä jos (seonnääs nii et i on ny 0; i om piänempi ku 10; i on ny i plus 1) ni {
+  jos i jakojäännös 2 on sama ku 0 ni { jatketaa; }
+  jos i on isompi ku 7 ni { ny riittää; }
+  tulosta "for", i;
+}
+seonnääs nii et j on ny 0;
+kuha tosi ni {
+  j on ny j plus 1;
+  jos j on sama ku 2 ni { jatketaa; }
+  jos j on sama ku 4 ni { ny riittää; }
+  tulosta "kuha", j;
+}
+jokaselle x tästä [1, 2, 3, 4] ni {
+  jos x on sama ku 2 ni { jatketaa; }
+  jos x on sama ku 4 ni { ny riittää; }
+  tulosta "jokaselle", x;
+}
+
+// Returning from inside nested loops.
+roseduuri etsi(taulukko, haettava) {
+  jokaselle rivi tästä taulukko ni {
+    jokaselle alkio tästä rivi ni {
+      jos alkio on sama ku haettava ni { kylä lähtee "löytyi"; }
+    }
+  }
+  kylä lähtee "ei löytyny";
+}
+tulosta etsi([[1, 2], [3, 4]], 3), etsi([[1]], 5);
+
+// Empty for-loop clauses.
+seonnääs nii et k on ny 0;
+elikkä jos (;;) ni {
+  k on ny k plus 1;
+  jos k on sama ku 3 ni { ny riittää; }
+}
+tulosta "k", k;
+
+// and/or return their operands and short circuit.
+tulosta tyhjä tai "oletus", 0 ja "kaks", epätosi ja paiskaa_tätä_ei_kutsuta();
+tulosta ei tosi, !epätosi, ei tyhjä, ei 0;
+
+// Arithmetic.
+tulosta 7 jakojäännös 3, 2 potenssiin 10, 2 potenssiin 3 potenssiin 2, 10 jaettuna 4;
+tulosta 1 plus 2 kertaa 3, (1 plus 2) kertaa 3, miinus 2 plus 5, 0.1 plus 0.2;
+tulosta 1 on sama ku "1", 1 ei oo sama ku "1", 1 eijoo 1, tyhjä on sama ku tyhjä;
+tulosta 3 on isompi tai sama ku 3, 2 om piänempi tai sama ku 1;
+tulosta pyöristä(2.5), alaspäin(2.7), ylöspäin(2.1), itseisarvo(miinus 3), juuri(16);

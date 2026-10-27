@@ -1,0 +1,16 @@
+kylä lähtee 5;
+
+roseduuri f() {
+  seonnääs nii et a on ny a;
+  seonnääs nii et b;
+  seonnääs nii et b;
+  ny riittää;
+  tulosta itse;
+}
+
+luakka A {
+  alota() {
+    kylä lähtee 1;
+  }
+  m() eli kanta.m();
+}
