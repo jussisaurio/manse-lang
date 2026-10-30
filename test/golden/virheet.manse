@@ -1,0 +1,40 @@
+// Runtime errors can be caught, and so can anything thrown with paiskaa.
+roseduuri yritä_tätä(f) {
+  yritä {
+    f();
+    kylä lähtee "ei virhettä";
+  } jos käy kalpaten (virhe) ni {
+    kylä lähtee virhe;
+  }
+}
+
+tulosta yritä_tätä(roseduuri() eli 1 jaettuna 0);
+tulosta yritä_tätä(roseduuri() eli 1 plus tosi);
+tulosta yritä_tätä(roseduuri() eli [1, 2][5]);
+tulosta yritä_tätä(roseduuri() eli tuntematon);
+tulosta yritä_tätä(roseduuri() eli pituus(5));
+tulosta yritä_tätä(roseduuri() eli pituus(1, 2));
+tulosta yritä_tätä(roseduuri() eli "ei kutsuttava"());
+tulosta yritä_tätä(roseduuri() eli juuri(miinus 1));
+tulosta yritä_tätä(roseduuri() { paiskaa [1, 2, 3]; });
+tulosta yritä_tätä(roseduuri() { varmista(1 on sama ku 2, "matikka on rikki"); });
+tulosta yritä_tätä(roseduuri() eli 1);
+
+luakka Tyhjä {}
+tulosta yritä_tätä(roseduuri() eli Tyhjä().puuttuva);
+tulosta yritä_tätä(roseduuri() eli 5.kenttä);
+
+// Rethrowing.
+yritä {
+  yritä {
+    paiskaa "sisempi";
+  } jos käy kalpaten (e) ni {
+    paiskaa "ulompi, koska " plus e;
+  }
+} jos käy kalpaten (e) ni {
+  tulosta e;
+}
+
+// Infinite recursion is caught too.
+roseduuri ikuinen(n) eli ikuinen(n plus 1);
+tulosta yritä_tätä(roseduuri() eli ikuinen(0));

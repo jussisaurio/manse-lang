@@ -1,0 +1,11 @@
+// Built-in signatures are derived from their Haskell types.
+jokaselle f tästä [pituus, väli, satunnainen, lisää, poista, numeroks, lue, kello, ohje, osa] ni {
+  tulosta ohje(f);
+}
+tulosta ohje(kartota), ohje(5);
+tulosta tyyppi(1), tyyppi("a"), tyyppi(tosi), tyyppi(tyhjä), tyyppi([]), tyyppi(pituus), tyyppi(roseduuri() {});
+
+seonnääs nii et r on ny satunnainen(1, 6);
+tulosta r on isompi tai sama ku 1 ja r om piänempi tai sama ku 6;
+tulosta kello() on isompi ku 0;
+tulosta kato([1, "kaks"]) on sama ku [1, "kaks"];

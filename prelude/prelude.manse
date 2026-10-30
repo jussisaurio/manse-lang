@@ -1,0 +1,113 @@
+// Manse standard library ("vakiokirjasto"), written in Manse itself.
+// Loaded before every program.
+
+roseduuri kartota(lista, f) {
+  seonnääs nii et tulos on ny [];
+  jokaselle x tästä lista ni {
+    lisää(tulos, f(x));
+  }
+  kylä lähtee tulos;
+}
+
+roseduuri suodata(lista, ehto) {
+  seonnääs nii et tulos on ny [];
+  jokaselle x tästä lista ni {
+    jos ehto(x) ni {
+      lisää(tulos, x);
+    }
+  }
+  kylä lähtee tulos;
+}
+
+roseduuri taita(lista, alku, f) {
+  seonnääs nii et kertymä on ny alku;
+  jokaselle x tästä lista ni {
+    kertymä on ny f(kertymä, x);
+  }
+  kylä lähtee kertymä;
+}
+
+roseduuri summa(lista) eli taita(lista, 0, roseduuri(a, b) eli a plus b);
+
+roseduuri tulo(lista) eli taita(lista, 1, roseduuri(a, b) eli a kertaa b);
+
+roseduuri jokanen(lista, ehto) {
+  jokaselle x tästä lista ni {
+    jos ei ehto(x) ni {
+      kylä lähtee epätosi;
+    }
+  }
+  kylä lähtee tosi;
+}
+
+roseduuri joku(lista, ehto) {
+  jokaselle x tästä lista ni {
+    jos ehto(x) ni {
+      kylä lähtee tosi;
+    }
+  }
+  kylä lähtee epätosi;
+}
+
+roseduuri sisältää(lista, alkio) eli joku(lista, roseduuri(x) eli x on sama ku alkio);
+
+roseduuri käännä(lista) {
+  seonnääs nii et tulos on ny [];
+  elikkä jos (seonnääs nii et i on ny pituus(lista) miinus 1; i on isompi tai sama ku 0; i on ny i miinus 1) ni {
+    lisää(tulos, lista[i]);
+  }
+  kylä lähtee tulos;
+}
+
+roseduuri numeroi(lista) {
+  seonnääs nii et tulos on ny [];
+  elikkä jos (seonnääs nii et i on ny 0; i om piänempi ku pituus(lista); i on ny i plus 1) ni {
+    lisää(tulos, [i, lista[i]]);
+  }
+  kylä lähtee tulos;
+}
+
+// Merge sort by a key function. Stable.
+roseduuri järjestä_millä(lista, avain) {
+  jos pituus(lista) om piänempi tai sama ku 1 ni {
+    kylä lähtee kopio(lista);
+  }
+  seonnääs nii et keski on ny alaspäin(pituus(lista) jaettuna 2);
+  seonnääs nii et vasen on ny järjestä_millä(osa(lista, 0, keski), avain);
+  seonnääs nii et oikee on ny järjestä_millä(osa(lista, keski, pituus(lista)), avain);
+  seonnääs nii et tulos on ny [];
+  seonnääs nii et i on ny 0;
+  seonnääs nii et j on ny 0;
+  kuha i om piänempi ku pituus(vasen) ja j om piänempi ku pituus(oikee) ni {
+    jos avain(oikee[j]) om piänempi ku avain(vasen[i]) ni {
+      lisää(tulos, oikee[j]);
+      j on ny j plus 1;
+    } mut jos ei ni {
+      lisää(tulos, vasen[i]);
+      i on ny i plus 1;
+    }
+  }
+  kylä lähtee tulos plus osa(vasen, i, pituus(vasen)) plus osa(oikee, j, pituus(oikee));
+}
+
+roseduuri järjestä(lista) eli järjestä_millä(lista, roseduuri(x) eli x);
+
+roseduuri suurin(lista) {
+  jos pituus(lista) on sama ku 0 ni {
+    paiskaa "tyhjällä listalla ei oo suurinta";
+  }
+  kylä lähtee taita(lista, lista[0], roseduuri(a, b) {
+    jos b on isompi ku a ni { kylä lähtee b; }
+    kylä lähtee a;
+  });
+}
+
+roseduuri pienin(lista) {
+  jos pituus(lista) on sama ku 0 ni {
+    paiskaa "tyhjällä listalla ei oo pienintä";
+  }
+  kylä lähtee taita(lista, lista[0], roseduuri(a, b) {
+    jos b om piänempi ku a ni { kylä lähtee b; }
+    kylä lähtee a;
+  });
+}

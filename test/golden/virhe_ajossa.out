@@ -1,0 +1,9 @@
+ennen virhettä
+Hei kato ny! test/golden/virhe_ajossa.manse:2:17: nollalla ei voi jakaa, hölömö
+  |
+2 |   kylä lähtee a jaettuna b;
+  |                 ^
+
+  roseduurissa jaa, jota kutsuttiin test/golden/virhe_ajossa.manse:6:18
+  roseduurissa laske, jota kutsuttiin test/golden/virhe_ajossa.manse:11:8
+  roseduurissa pää

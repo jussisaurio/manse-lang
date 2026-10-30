@@ -1,0 +1,57 @@
+// Closures share and mutate the variables they capture.
+roseduuri laskuri() {
+  seonnääs nii et n on ny 0;
+  kylä lähtee roseduuri() {
+    n on ny n plus 1;
+    kylä lähtee n;
+  };
+}
+
+seonnääs nii et a on ny laskuri();
+seonnääs nii et b on ny laskuri();
+a();
+a();
+tulosta a(), b();
+
+// Two closures over the same variable see each other's writes.
+roseduuri pari() {
+  seonnääs nii et arvo on ny 0;
+  roseduuri lue() eli arvo;
+  roseduuri aseta(x) { arvo on ny x; }
+  kylä lähtee [lue, aseta];
+}
+seonnääs nii et p on ny pari();
+p[1](42);
+tulosta p[0]();
+
+// Each loop iteration gets its own variable.
+seonnääs nii et funktiot on ny [];
+jokaselle i tästä väli(0, 3) ni {
+  lisää(funktiot, roseduuri() eli i);
+}
+tulosta kartota(funktiot, roseduuri(f) eli f());
+
+// Closures see variables declared after they were created, at the top level.
+roseduuri kysy() eli myöhemmin;
+seonnääs nii et myöhemmin on ny "nyt on";
+tulosta kysy();
+
+// Mutual recursion.
+roseduuri parillinen(n) {
+  jos n on sama ku 0 ni { kylä lähtee tosi; }
+  kylä lähtee pariton(n miinus 1);
+}
+roseduuri pariton(n) {
+  jos n on sama ku 0 ni { kylä lähtee epätosi; }
+  kylä lähtee parillinen(n miinus 1);
+}
+tulosta parillinen(10), pariton(7), parillinen(7);
+
+// Calling a function doesn't clobber the caller's variables.
+roseduuri apu() eli 1;
+roseduuri kutsuja() {
+  seonnääs nii et paikallinen on ny "ehjä";
+  apu();
+  kylä lähtee paikallinen;
+}
+tulosta kutsuja();

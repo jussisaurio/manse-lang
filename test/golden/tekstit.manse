@@ -1,0 +1,18 @@
+seonnääs nii et nimi on ny "Tampere";
+tulosta "Moro {nimi}! {1 plus 2} on kolme.";
+tulosta "aaltosulut: \{ja\}, lainaus: \"jee\", kenoviiva: \\";
+tulosta "a" plus 1, 1 plus "a", "lista: " plus [1, "kaks"];
+tulosta "ha" kertaa 3;
+tulosta pituus("äöå"), "Manse"[0], "Manse"[miinus 1];
+tulosta isoks("pirkka"), pieneks("PIRKKA"), "[" plus siistiks("  tila  ") plus "]";
+tulosta pilko("a,b,c", ","), pilko("abc", "");
+tulosta yhdistä(["a", 1, tosi], "-");
+tulosta osa("Tampere", 0, 3), osa("Tampere", miinus 4, 7);
+tulosta numeroks("3.5") plus 1, numeroks("-2"), numeroks("ei luku");
+tulosta tekstiks(42) plus tekstiks([1, 2]);
+tulosta "abc" om piänempi ku "abd", "b" on isompi ku "abc";
+jokaselle kirjain tästä "moi" ni {
+  tulosta kirjain;
+}
+tulosta "multi
+line";

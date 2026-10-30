@@ -1,0 +1,5 @@
+Hei kato ny! test/golden/virhe_paiskattu.manse:2:1: ["rikki", 42]
+  |
+2 | paiskaa tila;
+  | ^
+

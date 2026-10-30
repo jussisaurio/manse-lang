@@ -1,0 +1,9 @@
+Voi pyhä Sylvi, tästä ei saa mittään selvää!
+
+test/golden/virhe_jäsennys.manse:3:3:
+  |
+3 |   tulosta x;
+  |   ^
+en oottanu tätä: 't'
+oottasin: '(', '.', '[', tai puolipiste
+

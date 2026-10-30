@@ -1,0 +1,31 @@
+seonnääs nii et xs on ny [3, 1, 2];
+tulosta xs, pituus(xs), xs[0], xs[miinus 1];
+xs[1] on ny 10;
+lisää(xs, 4);
+tulosta xs, poista(xs), xs;
+tulosta [1, 2] plus [3], [] , [[1, 2], [3]];
+tulosta [1, [2, 3]] on sama ku [1, [2, 3]], [1] on sama ku [2];
+
+// Lists are shared by reference.
+seonnääs nii et ys on ny xs;
+lisää(ys, 99);
+tulosta xs;
+seonnääs nii et zs on ny kopio(xs);
+lisää(zs, 100);
+tulosta xs, zs;
+
+tulosta väli(0, 5), väli(3, 3);
+tulosta kartota([1, 2, 3], roseduuri(x) eli x kertaa 10);
+tulosta suodata(väli(0, 10), roseduuri(x) eli x jakojäännös 3 on sama ku 0);
+tulosta taita([1, 2, 3, 4], 0, roseduuri(a, b) eli a plus b), summa([1, 2, 3]), tulo([1, 2, 3, 4]);
+tulosta jokanen([2, 4], roseduuri(x) eli x jakojäännös 2 on sama ku 0), joku([1, 3], roseduuri(x) eli x on isompi ku 2);
+tulosta sisältää([1, 2, 3], 2), sisältää([1, 2, 3], 5);
+tulosta käännä([1, 2, 3]), numeroi(["a", "b"]);
+tulosta järjestä([5, 2, 8, 1, 9, 3]), järjestä(["pirkka", "manse", "nääs"]);
+tulosta järjestä_millä([[2, "b"], [1, "a"], [2, "a"]], roseduuri(p) eli p[0]);
+tulosta suurin([3, 7, 2]), pienin([3, 7, 2]);
+tulosta osa([1, 2, 3, 4, 5], 1, 3), osa([1, 2, 3], 0, 100);
+
+// Pipelines and method-style calls.
+tulosta väli(1, 6) sitte kartota(roseduuri(x) eli x kertaa x) sitte summa;
+tulosta [3, 1, 2].järjestä().käännä(), "tampere".isoks().pituus();

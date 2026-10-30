@@ -1,0 +1,4 @@
+roseduuri pää() {
+  seonnääs nii et x on ny 1
+  tulosta x;
+}
